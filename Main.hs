@@ -11,8 +11,8 @@ main = do
     , prefix = "scraper"
     , debug = True
     }
+  registerGcMetrics store
   _ <- forkStatsd opts store
 
   forever $ do
-    registerGcMetrics store
     threadDelay 10000000  -- 10s
