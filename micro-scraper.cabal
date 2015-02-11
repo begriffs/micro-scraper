@@ -19,7 +19,8 @@ cabal-version:       >=1.10
 executable micro-scraper
   main-is:             Main.hs
   -- other-modules:       
-  extensions:          OverloadedStrings
+  ghc-options:         -Wall -W -O2 "-with-rtsopts=-T"
+  default-extensions:  OverloadedStrings
   build-depends:       base >=4.7 && <4.8
                      , ekg-core == 0.1.*
                      , ekg-statsd == 0.2.*
