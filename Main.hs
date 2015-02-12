@@ -23,7 +23,12 @@ main = do
 
   amqpConnection <- AMQP.openConnection "rabbitmq.node.consul" "/" "guest" "guest"
   amqpChannel <- AMQP.openChannel amqpConnection
-  AMQP.bindQueue amqpChannel "downloads" "" "downloads"
+  _ <- AMQP.declareQueue amqpChannel $
+    AMQP.newQueue { AMQP.queueName = "downloads" }
+  AMQP.declareExchange amqpChannel $
+    AMQP.newExchange { AMQP.exchangeName = "microservice"
+                     , AMQP.exchangeType = "direct" }
+  AMQP.bindQueue amqpChannel "downloads" "microservice" "downloads"
   forever $
     AMQP.consumeMsgs amqpChannel "downloads" AMQP.Ack $ download store
 
