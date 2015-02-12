@@ -1,6 +1,6 @@
 import System.Metrics
 import System.Remote.Monitoring.Statsd
-import Control.Monad (forever)
+import Control.Monad (void)
 import Data.String.Conversions (cs)
 import Data.Text hiding (length)
 import Data.Monoid ( (<>) )
@@ -29,8 +29,7 @@ main = do
     AMQP.newExchange { AMQP.exchangeName = "microservice"
                      , AMQP.exchangeType = "direct" }
   AMQP.bindQueue amqpChannel "downloads" "microservice" "downloads"
-  forever $
-    AMQP.consumeMsgs amqpChannel "downloads" AMQP.Ack $ download store
+  void $ AMQP.consumeMsgs amqpChannel "downloads" AMQP.Ack $ download store
 
 download :: Store -> (AMQP.Message, AMQP.Envelope) -> IO ()
 download store (m, env) = do
