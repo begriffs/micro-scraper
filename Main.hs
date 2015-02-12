@@ -1,6 +1,7 @@
 import System.Metrics
 import System.Remote.Monitoring.Statsd
-import Control.Monad (void)
+import Control.Monad (forever, void)
+import Control.Concurrent (threadDelay)
 import Data.String.Conversions (cs)
 import Data.Text hiding (length)
 import Data.Monoid ( (<>) )
@@ -30,6 +31,8 @@ main = do
                      , AMQP.exchangeType = "direct" }
   AMQP.bindQueue amqpChannel "downloads" "microservice" "downloads"
   void $ AMQP.consumeMsgs amqpChannel "downloads" AMQP.Ack $ download store
+
+  forever $ threadDelay 10000000  -- 10s
 
 download :: Store -> (AMQP.Message, AMQP.Envelope) -> IO ()
 download store (m, env) = do
