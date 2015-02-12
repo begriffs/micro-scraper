@@ -8,6 +8,7 @@ import Data.Monoid ( (<>) )
 
 import Crypto.Hash.MD5 (hash)
 import Network.HTTP hiding (host)
+import Text.Bytedump (dumpRawBS)
 import qualified Network.AMQP as AMQP
 
 import qualified System.Metrics.Label as L
@@ -37,7 +38,7 @@ main = do
 download :: Store -> (AMQP.Message, AMQP.Envelope) -> IO ()
 download store (m, env) = do
   let url = cs $ AMQP.msgBody m
-      md5 = cs $ hash url
+      md5 = cs $ dumpRawBS $hash url
 
   lblUrl    <- createLabel (intercalate "." ["http",md5,"url"])    store
   lblStatus <- createLabel (intercalate "." ["http",md5,"status"]) store

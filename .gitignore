@@ -1,3 +1,5 @@
 .cabal-sandbox
 dist
 cabal.sandbox.config
+codex.tags
+hscope.out
